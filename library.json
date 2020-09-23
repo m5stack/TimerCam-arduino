@@ -1,0 +1,17 @@
+{
+  "name": "Timer-CAM",
+  "description": "Library for M5Stack Timer-CAM development kit",
+  "keywords": "Timer-CAM",
+  "authors": {
+    "name": "Eeebin, M5Stack",
+    "url": "http://www.m5stack.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m5stack/TimerCam-arduino.git"
+  },
+  "version": "0.0.1",
+  "framework": "arduino",
+  "platforms": "espressif32"
+}
+  
