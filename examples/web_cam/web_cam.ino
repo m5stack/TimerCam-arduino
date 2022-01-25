@@ -1,11 +1,11 @@
-#include "esp_camera.h"
 #include "battery.h"
+#include "esp_camera.h"
 #include <WiFi.h>
 
 #include "camera_pins.h"
 
-const char* ssid = "ssid";
-const char* password = "********";
+const char *ssid = "ssid";
+const char *password = "********";
 
 void startCameraServer();
 
@@ -15,8 +15,8 @@ void setup() {
   Serial.setDebugOutput(true);
   Serial.println();
   pinMode(2, OUTPUT);
-  digitalWrite(2, HIGH); 
-  
+  digitalWrite(2, HIGH);
+
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -41,7 +41,7 @@ void setup() {
   config.frame_size = FRAMESIZE_UXGA;
   config.jpeg_quality = 10;
   config.fb_count = 2;
- 
+
   // camera init
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
@@ -49,13 +49,13 @@ void setup() {
     return;
   }
 
-  sensor_t * s = esp_camera_sensor_get();
-  //initial sensors are flipped vertically and colors are a bit saturated
-  s->set_vflip(s, 1);//flip it back
-  s->set_brightness(s, 1);//up the blightness just a bit
-  s->set_saturation(s, -2);//lower the saturation
+  sensor_t *s = esp_camera_sensor_get();
+  // initial sensors are flipped vertically and colors are a bit saturated
+  s->set_vflip(s, 1);       // flip it back
+  s->set_brightness(s, 1);  // up the blightness just a bit
+  s->set_saturation(s, -2); // lower the saturation
 
-  //drop down frame size for higher initial frame rate
+  // drop down frame size for higher initial frame rate
   s->set_framesize(s, FRAMESIZE_QVGA);
 
   Serial.printf("Connect to %s, %s\r\n", ssid, password);
@@ -69,7 +69,7 @@ void setup() {
   Serial.println("");
   Serial.println("WiFi connected");
 
-  //If you want to use AP mode, you can use the following code
+  // If you want to use AP mode, you can use the following code
   // WiFi.softAP(ssid, password);
   // IPAddress IP = WiFi.softAPIP();
   // Serial.print("AP IP address: ");

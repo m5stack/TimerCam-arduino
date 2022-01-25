@@ -1,9 +1,9 @@
 #include "Arduino.h"
-#include "freertos/FreeRTOS.h"
-#include "camera_pins.h"
 #include "battery.h"
-#include "led.h"
 #include "bmm8563.h"
+#include "camera_pins.h"
+#include "freertos/FreeRTOS.h"
+#include "led.h"
 
 void led_breathe_test() {
   for (int16_t i = 0; i < 1024; i++) {
@@ -28,7 +28,7 @@ void setup() {
 
   // 5 sec later will wake up
   bmm8563_setTimerIRQ(5);
-  
+
   // rtc_date_t date;
   // date.year = 2020;
   // date.month = 9;
@@ -43,7 +43,8 @@ void setup() {
 void loop() {
   rtc_date_t date;
   bmm8563_getTime(&date);
-  Serial.printf("Time: %d/%d/%d %02d:%02d:%-2d\r\n", date.year, date.month, date.day, date.hour, date.minute, date.second);
+  Serial.printf("Time: %d/%d/%d %02d:%02d:%-2d\r\n", date.year, date.month,
+                date.day, date.hour, date.minute, date.second);
   Serial.printf("volt: %d mv\r\n", bat_get_voltage());
 
   // disable bat output, will wake up after 5 sec, Sleep current is 1~2μA

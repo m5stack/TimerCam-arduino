@@ -2,6 +2,7 @@
 #include "driver/gpio.h"
 #include "driver/adc.h"
 #include "esp_adc_cal.h"
+#include "soc/adc_channel.h"
 #include "stdlib.h"
 
 #define BAT_OUTPUT_HOLD_PIN 33
