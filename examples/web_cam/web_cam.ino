@@ -1,17 +1,21 @@
 #include "battery.h"
 #include "esp_camera.h"
 #include <WiFi.h>
+#include "soc/soc.h"
+#include "soc/rtc_cntl_reg.h"
 
 #include "camera_pins.h"
 
-const char *ssid = "ssid";
-const char *password = "********";
+const char *ssid = "******";
+const char *password = "******";
 
 void startCameraServer();
 
 void setup() {
   Serial.begin(115200);
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable   detector
   bat_init();
+  bat_hold_output();
   Serial.setDebugOutput(true);
   Serial.println();
   pinMode(2, OUTPUT);
@@ -84,5 +88,8 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  delay(10000);
+  delay(100);
+  digitalWrite(2, HIGH);
+  delay(100);
+  digitalWrite(2, LOW);
 }
