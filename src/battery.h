@@ -9,10 +9,10 @@ extern "C" {
 // Init bat hold gpio, adc gpio
 void bat_init();
 
-// Enable battery power supply if USB is unplugged 
+// Enable battery power supply if USB is unplugged
 void bat_hold_output();
 
-// Disable battery power supply if USB is unplugged 
+// Disable battery power supply if USB is unplugged
 void bat_disable_output();
 
 // return: 0 ~ 4096
