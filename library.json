@@ -14,7 +14,6 @@
   "frameworks": "arduino",
   "platforms": "espressif32",
   "dependencies": {
-    "ArduinoHttpClient": "*",
-    "Micro-RTSP": "*"
+    "ArduinoHttpClient": "*"
   }
 }
