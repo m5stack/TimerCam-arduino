@@ -91,8 +91,6 @@ static void jpegStream(WiFiClient* client) {
     }
 
     for (;;) {
-        int64_t fr_start = esp_timer_get_time();
-
         if (TimerCAM.Camera.get()) {
             TimerCAM.Power.setLed(255);
             Serial.printf("pic size: %d\n", TimerCAM.Camera.fb->len);
@@ -117,8 +115,9 @@ static void jpegStream(WiFiClient* client) {
             last_frame         = fr_end;
             frame_time /= 1000;
             Serial.printf("MJPG: %luKB %lums (%.1ffps)\r\n",
-                          (uint32_t)(TimerCAM.Camera.fb->len / 1024),
-                          (uint32_t)frame_time, 1000.0 / (uint32_t)frame_time);
+                          (long unsigned int)(TimerCAM.Camera.fb->len / 1024),
+                          (long unsigned int)frame_time,
+                          1000.0 / (long unsigned int)frame_time);
 
             TimerCAM.Camera.free();
             TimerCAM.Power.setLed(0);
