@@ -1,3 +1,8 @@
+#ifndef _M5_TIMER_CAM_CAMERA_H_
+#define _M5_TIMER_CAM_CAMERA_H_
+
+#include "esp_camera.h"
+
 #define PWDN_GPIO_NUM  -1
 #define RESET_GPIO_NUM 15
 #define XCLK_GPIO_NUM  27
@@ -23,3 +28,16 @@
 
 #define Ext_PIN_1 4
 #define Ext_PIN_2 13
+
+class Camera_Class {
+   private:
+   public:
+    camera_fb_t* fb;
+    sensor_t* sensor;
+    camera_config_t* config;
+    bool begin();
+    bool get();
+    bool free();
+};
+
+#endif

@@ -1,96 +1,116 @@
-#include "OV2640.h"
-#include <WebServer.h>
+/**
+ * @file rtsp_stream.ino
+ * @author SeanKwok (shaoxiang@m5stack.com)
+ * @brief TimerCAM RTSP Stream
+ * @version 0.1
+ * @date 2023-12-28
+ *
+ *
+ * @Hardwares: TimerCAM
+ * @Platform Version: Arduino M5Stack Board Manager v2.0.9
+ * @Dependent Library:
+ * TimerCam-arduino: https://github.com/m5stack/TimerCam-arduino
+ * Micro-RTSP: https://github.com/geeksville/Micro-RTSP
+ */
+
+#include "M5TimerCAM.h"
 #include <WiFi.h>
-#include <WiFiClient.h>
-
-#include "CRtspSession.h"
-#include "OV2640Streamer.h"
-#include "SimStreamer.h"
-
-#include "battery.h"
+#include "CStreamer.h"
 
 #define ssid     "ssid"
 #define password "password"
 
-OV2640 cam;
+class TimerCamRTSP : public CStreamer {
+    Camera_Class &_camera;
 
-WiFiServer rtspServer(8554);
-CStreamer *streamer;
+   public:
+    TimerCamRTSP(Camera_Class &camera, int width, int height)
+        : CStreamer(width, height), _camera(camera){};
+    virtual void streamImage(uint32_t curMsec) {
+        if (_camera.get()) {
+            streamFrame(_camera.fb->buf, _camera.fb->len, millis());
+            _camera.free();
+        }
+    }
+};
+
+TimerCamRTSP *streamer;
+WiFiServer server(8554);
 
 void setup() {
-    bat_init();
-    pinMode(2, OUTPUT);
-    digitalWrite(2, HIGH);
-    Serial.begin(115200);
-    while (!Serial) {
-        ;
+    TimerCAM.begin();
+
+    if (!TimerCAM.Camera.begin()) {
+        Serial.println("Camera Init Fail");
+        return;
     }
+    Serial.println("Camera Init Success");
 
-    camera_config_t timercam_config{
+    TimerCAM.Camera.sensor->set_pixformat(TimerCAM.Camera.sensor,
+                                          PIXFORMAT_JPEG);
+    TimerCAM.Camera.sensor->set_framesize(TimerCAM.Camera.sensor,
+                                          FRAMESIZE_QVGA);
 
-        .pin_pwdn     = -1,
-        .pin_reset    = 15,
-        .pin_xclk     = 27,
-        .pin_sscb_sda = 25,
-        .pin_sscb_scl = 23,
+    TimerCAM.Camera.sensor->set_vflip(TimerCAM.Camera.sensor, 1);
+    TimerCAM.Camera.sensor->set_hmirror(TimerCAM.Camera.sensor, 0);
 
-        .pin_d7       = 19,
-        .pin_d6       = 36,
-        .pin_d5       = 18,
-        .pin_d4       = 39,
-        .pin_d3       = 5,
-        .pin_d2       = 34,
-        .pin_d1       = 35,
-        .pin_d0       = 32,
-        .pin_vsync    = 22,
-        .pin_href     = 26,
-        .pin_pclk     = 21,
-        .xclk_freq_hz = 20000000,
-        .ledc_timer   = LEDC_TIMER_0,
-        .ledc_channel = LEDC_CHANNEL_0,
-        .pixel_format = PIXFORMAT_JPEG,
-        .frame_size   = FRAMESIZE_VGA,
-        .jpeg_quality = 12,  // 0-63 lower numbers are higher quality
-        .fb_count = 2  // if more than one i2s runs in continous mode.  Use only
-                       // with jpeg
-    };
-
-    cam.init(timercam_config);
-
-    sensor_t *s = esp_camera_sensor_get();
-    s->set_vflip(s, 1);
-    s->set_hmirror(s, 0);
-
-    IPAddress ip;
+    if (TimerCAM.Camera.get()) {
+        int width  = TimerCAM.Camera.fb->width;
+        int height = TimerCAM.Camera.fb->height;
+        streamer   = new TimerCamRTSP(TimerCAM.Camera, width, height);
+        TimerCAM.Camera.free();
+    }
 
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
+    WiFi.setSleep(false);
+    Serial.println("");
+    Serial.print("Connecting to ");
+    Serial.println(ssid);
+    // Wait for connection
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
-        Serial.print(F("."));
+        Serial.print(".");
     }
-    ip = WiFi.localIP();
-    Serial.println(F("WiFi connected"));
+
+    Serial.println("");
+
+    Serial.print("Connected to ");
+    Serial.println(ssid);
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+
     Serial.print("RTSP URL: rtsp://");
-    Serial.print(ip);
+    Serial.print(WiFi.localIP());
     Serial.println(":8554/mjpeg/1");
-    rtspServer.begin();
-    // streamer = new SimStreamer(true);             // our streamer for UDP/TCP
-    // based RTP transport
-    streamer = new OV2640Streamer(
-        cam);  // our streamer for UDP/TCP based RTP transport
+
+    server.begin();
 }
 
 void loop() {
+    uint32_t msecPerFrame     = 100;
+    static uint32_t lastimage = millis();
+
     // If we have an active client connection, just service that until gone
     streamer->handleRequests(0);  // we don't use a timeout here,
     // instead we send only if we have new enough frames
     uint32_t now = millis();
     if (streamer->anySessions()) {
-        streamer->streamImage(now);
+        if (now > lastimage + msecPerFrame ||
+            now < lastimage) {  // handle clock rollover
+            streamer->streamImage(now);
+            lastimage = now;
+
+            // check if we are overrunning our max frame rate
+            now = millis();
+            if (now > lastimage + msecPerFrame) {
+                Serial.printf("warning exceeding max frame rate of %d ms\n",
+                              now - lastimage);
+            }
+        }
     }
 
-    WiFiClient rtspClient = rtspServer.accept();
+    WiFiClient rtspClient = server.accept();
     if (rtspClient) {
         Serial.print("client: ");
         Serial.print(rtspClient.remoteIP());

@@ -1,5 +1,10 @@
 # Timer-CAM Library
 
+[![Arduino Compile](https://github.com/m5stack/TimerCam-arduino/actions/workflows/arduino-action-timer_cam-compile.yml/badge.svg)](https://github.com/m5stack/TimerCam-arduino/actions/workflows/arduino-action-timer_cam-compile.yml)
+[![Arduino Lint](https://github.com/m5stack/TimerCam-arduino/actions/workflows/Arduino-Lint-Check.yml/badge.svg)](https://github.com/m5stack/TimerCam-arduino/actions/workflows/Arduino-Lint-Check.yml)
+[![Clang Format](https://github.com/m5stack/TimerCam-arduino/actions/workflows/clang-format-check.yml/badge.svg)](https://github.com/m5stack/TimerCam-arduino/actions/workflows/clang-format-check.yml)
+
+
 [English](README.md) | 中文
 
 ## 描述
@@ -15,47 +20,47 @@
 
 **摄像头驱动芯片 OV3660 接口**
 
-| *接口*             | *Camera Pin*| *TimerCamera*  |
-| :-------------------  | :--------:| :------:  |
-| SCCB Clock            | SIOC     |IO23        |
-| SCCB Data             | SIOD     |IO25       |
-| System Clock          | XCLK     |IO27       |
-| Vertical Sync         | VSYNC    |IO22       |
-| Horizontal Reference  | HREF     |IO26       |
-| Pixel Clock           | PCLK     |IO21       |
-| Pixel Data Bit 0      | D0       |IO32       |
-| Pixel Data Bit 1      | D1       |IO35       |
-| Pixel Data Bit 2      | D2       |IO34       |
-| Pixel Data Bit 3      | D3       |IO5        |
-| Pixel Data Bit 4      | D4       |IO39       |
-| Pixel Data Bit 5      | D5       |IO18       |
-| Pixel Data Bit 6      | D6       |IO36       |
-| Pixel Data Bit 7      | D7       |IO19       |
-| Camera Reset          | RESET    |IO15       |
-| Camera Power Down     | PWDN     |-1         |
-| Power Supply 3.3V     | 3V3      | 3V3       |
-| Ground                | GND      | GND       |
+| *接口*               | *Camera Pin* | *TimerCamera* |
+| :------------------- | :----------: | :-----------: |
+| SCCB Clock           |     SIOC     |     IO23      |
+| SCCB Data            |     SIOD     |     IO25      |
+| System Clock         |     XCLK     |     IO27      |
+| Vertical Sync        |    VSYNC     |     IO22      |
+| Horizontal Reference |     HREF     |     IO26      |
+| Pixel Clock          |     PCLK     |     IO21      |
+| Pixel Data Bit 0     |      D0      |     IO32      |
+| Pixel Data Bit 1     |      D1      |     IO35      |
+| Pixel Data Bit 2     |      D2      |     IO34      |
+| Pixel Data Bit 3     |      D3      |      IO5      |
+| Pixel Data Bit 4     |      D4      |     IO39      |
+| Pixel Data Bit 5     |      D5      |     IO18      |
+| Pixel Data Bit 6     |      D6      |     IO36      |
+| Pixel Data Bit 7     |      D7      |     IO19      |
+| Camera Reset         |    RESET     |     IO15      |
+| Camera Power Down    |     PWDN     |      -1       |
+| Power Supply 3.3V    |     3V3      |      3V3      |
+| Ground               |     GND      |      GND      |
 
 **GROVE 接口**
 
-| *Grove*         | *TimerCamera*  | 
-| :-----------: | :------:  | 
-| SCL           | IO13      | 
-| SDA           | IO4       |
-| 5V            | 5V        |
-| GND           | GND       | 
+| *Grove* | *TimerCamera* |
+| :-----: | :-----------: |
+|   SCL   |     IO13      |
+|   SDA   |      IO4      |
+|   5V    |      5V       |
+|   GND   |      GND      |
 
 **LED 接口**
 
-| *LED*         | *TimerCamera*  |
-| :-----------:| :------:  | 
-| LED_Pin      | IO2     | 
+|  *LED*  | *TimerCamera* |
+| :-----: | :-----------: |
+| LED_Pin |      IO2      |
 
 **BAT 接口**
 
-| *BAT*         | *TimerCamera*  |
-| :-----------:| :------:  | 
-| BAT_ADC_Pin     | IO33     | 
+|    *BAT*    | *TimerCamera* |
+| :---------: | :-----------: |
+| BAT_ADC_Pin |     IO33      |
 
 ## 相关链接
 

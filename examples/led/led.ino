@@ -1,9 +1,9 @@
 /**
- * @file wakeup.ino
+ * @file led.ino
  * @author SeanKwok (shaoxiang@m5stack.com)
- * @brief TimerCAM RTC Wakeup Test
+ * @brief TimerCAM LED Test
  * @version 0.1
- * @date 2024-01-02
+ * @date 2023-12-28
  *
  *
  * @Hardwares: TimerCAM
@@ -11,28 +11,20 @@
  * @Dependent Library:
  * TimerCam-arduino: https://github.com/m5stack/TimerCam-arduino
  */
-
 #include "M5TimerCAM.h"
 
-void led_breathe(int ms) {
+void setup() {
+    TimerCAM.begin();
+}
+
+void loop() {
     for (int16_t i = 0; i < 255; i++) {
         TimerCAM.Power.setLed(i);
-        vTaskDelay(pdMS_TO_TICKS(ms));
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 
     for (int16_t i = 255; i >= 0; i--) {
         TimerCAM.Power.setLed(i);
-        vTaskDelay(pdMS_TO_TICKS(ms));
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
-}
-
-void setup() {
-    TimerCAM.begin(true);
-    Serial.println("Wake up!!!");
-    led_breathe(10);
-    // sleep after 5s wakeup!
-    TimerCAM.Power.timerSleep(5);
-}
-
-void loop() {
 }
