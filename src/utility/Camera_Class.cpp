@@ -29,15 +29,24 @@ static camera_config_t camera_config = {
     .fb_count      = 2,
     .fb_location   = CAMERA_FB_IN_PSRAM,
     .grab_mode     = CAMERA_GRAB_WHEN_EMPTY,
-    .sccb_i2c_port = 0,
+    .sccb_i2c_port = 1,
 };
 
 bool Camera_Class::begin() {
+    config        = &camera_config;
     esp_err_t err = esp_camera_init(&camera_config);
     if (err != ESP_OK) {
         return false;
     }
     sensor = esp_camera_sensor_get();
+    return true;
+}
+
+bool Camera_Class::deinit() {
+    esp_err_t err = esp_camera_deinit();
+    if (err != ESP_OK) {
+        return false;
+    }
     return true;
 }
 

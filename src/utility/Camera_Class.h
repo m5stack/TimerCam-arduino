@@ -38,6 +38,7 @@ class Camera_Class {
     bool begin();
     bool get();
     bool free();
+    bool deinit();
 };
 
 #endif

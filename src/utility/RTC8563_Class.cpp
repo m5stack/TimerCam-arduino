@@ -29,7 +29,7 @@ static std::uint8_t byteToBcd2(std::uint8_t value) {
 }
 
 bool RTC8563_Class::begin() {
-    _i2c.begin(&Wire1, 12, 14);
+    _i2c.begin(&Wire, 12, 14);
     _i2c.writeByte(BM8563_I2C_ADDR, 0x00, 0x00);
     return _i2c.writeByte(BM8563_I2C_ADDR, 0x0E, 0x03);
     ;
