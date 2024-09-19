@@ -15,9 +15,8 @@
 
 typedef WiFiClient *SOCKET;
 typedef WiFiUDP *UDPSOCKET;
-typedef IPAddress
-    IPADDRESS;  // On linux use uint32_t in network byte order (per getpeername)
-typedef uint16_t IPPORT;  // on linux use network byte order
+typedef IPAddress IPADDRESS;  // On linux use uint32_t in network byte order (per getpeername)
+typedef uint16_t IPPORT;      // on linux use network byte order
 
 #define NULLSOCKET NULL
 
@@ -62,8 +61,7 @@ inline ssize_t socketsend(SOCKET sockfd, const void *buf, size_t len) {
     return sockfd->write((uint8_t *)buf, len);
 }
 
-inline ssize_t udpsocketsend(UDPSOCKET sockfd, const void *buf, size_t len,
-                             IPADDRESS destaddr, IPPORT destport) {
+inline ssize_t udpsocketsend(UDPSOCKET sockfd, const void *buf, size_t len, IPADDRESS destaddr, IPPORT destport) {
     sockfd->beginPacket(destaddr, destport);
     sockfd->write((const uint8_t *)buf, len);
     if (!sockfd->endPacket()) printf("error sending udp packet\n");

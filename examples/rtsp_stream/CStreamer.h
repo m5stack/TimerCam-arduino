@@ -27,18 +27,15 @@ class CStreamer {
     u_short GetRtpServerPort();
     u_short GetRtcpServerPort();
 
-    virtual void streamImage(
-        uint32_t curMsec) = 0;  // send a new image to the client
+    virtual void streamImage(uint32_t curMsec) = 0;  // send a new image to the client
     bool InitUdpTransport(void);
     void ReleaseUdpTransport(void);
 
    protected:
-    void streamFrame(unsigned const char *data, uint32_t dataLen,
-                     uint32_t curMsec);
+    void streamFrame(unsigned const char *data, uint32_t dataLen, uint32_t curMsec);
 
    private:
-    int SendRtpPacket(unsigned const char *jpeg, int jpegLen,
-                      int fragmentOffset, BufPtr quant0tbl = NULL,
+    int SendRtpPacket(unsigned const char *jpeg, int jpegLen, int fragmentOffset, BufPtr quant0tbl = NULL,
                       BufPtr quant1tbl = NULL);  // returns new fragmentOffset
                                                  // or 0 if finished with frame
 
@@ -66,8 +63,7 @@ class CStreamer {
 // actual JPEG stream data and returns the number of bytes skipped
 // returns true if the file seems to be valid jpeg
 // If quant tables can be found they will be stored in qtable0/1
-bool decodeJPEGfile(BufPtr *start, uint32_t *len, BufPtr *qtable0,
-                    BufPtr *qtable1);
+bool decodeJPEGfile(BufPtr *start, uint32_t *len, BufPtr *qtable0, BufPtr *qtable1);
 bool findJPEGheader(BufPtr *start, uint32_t *len, uint8_t marker);
 
 // Given a jpeg ptr pointing to a pair of length bytes, advance the pointer to

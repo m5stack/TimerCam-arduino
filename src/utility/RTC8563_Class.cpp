@@ -8,8 +8,7 @@
 
 tm rtc_datetime_t::get_tm(void) {
     tm t_st = {
-        time.seconds,     time.minutes, time.hours, date.date, date.month - 1,
-        date.year - 1900, date.weekDay, 0,          0,
+        time.seconds, time.minutes, time.hours, date.date, date.month - 1, date.year - 1900, date.weekDay, 0, 0,
     };
     return t_st;
 }
@@ -53,8 +52,7 @@ bool RTC8563_Class::getDateTime(rtc_datetime_t* datetime) {
     datetime->date.date    = bcd2ToByte(buf[3] & 0x3f);
     datetime->date.weekDay = bcd2ToByte(buf[4] & 0x07);
     datetime->date.month   = bcd2ToByte(buf[5] & 0x1f);
-    datetime->date.year =
-        bcd2ToByte(buf[6] & 0xff) + ((0x80 & buf[5]) ? 1900 : 2000);
+    datetime->date.year    = bcd2ToByte(buf[6] & 0xff) + ((0x80 & buf[5]) ? 1900 : 2000);
     return true;
 }
 
@@ -72,8 +70,7 @@ bool RTC8563_Class::getTime(rtc_time_t* time) {
 }
 
 void RTC8563_Class::setTime(const rtc_time_t& time) {
-    std::uint8_t buf[] = {byteToBcd2(time.seconds), byteToBcd2(time.minutes),
-                          byteToBcd2(time.hours)};
+    std::uint8_t buf[] = {byteToBcd2(time.seconds), byteToBcd2(time.minutes), byteToBcd2(time.hours)};
     _i2c.writeBytes(BM8563_I2C_ADDR, 0x02, buf, sizeof(buf));
 }
 
@@ -93,8 +90,7 @@ bool RTC8563_Class::getDate(rtc_date_t* date) {
 
 void RTC8563_Class::setDate(const rtc_date_t& date) {
     std::uint8_t w = date.weekDay;
-    if (w > 6 && date.year >= 1900 &&
-        ((std::size_t)(date.month - 1)) < 12) {  /// weekDay auto adjust
+    if (w > 6 && date.year >= 1900 && ((std::size_t)(date.month - 1)) < 12) {  /// weekDay auto adjust
         int32_t year  = date.year;
         int32_t month = date.month;
         int32_t day   = date.date;
@@ -103,15 +99,12 @@ void RTC8563_Class::setDate(const rtc_date_t& date) {
             month += 12;
         }
         int32_t ydiv100 = year / 100;
-        w               = (year + (year >> 2) - ydiv100 + (ydiv100 >> 2) +
-             (13 * month + 8) / 5 + day) %
-            7;
+        w               = (year + (year >> 2) - ydiv100 + (ydiv100 >> 2) + (13 * month + 8) / 5 + day) % 7;
     }
 
-    std::uint8_t buf[] = {
-        byteToBcd2(date.date), w,
-        (std::uint8_t)(byteToBcd2(date.month) + (date.year < 2000 ? 0x80 : 0)),
-        byteToBcd2(date.year % 100)};
+    std::uint8_t buf[] = {byteToBcd2(date.date), w,
+                          (std::uint8_t)(byteToBcd2(date.month) + (date.year < 2000 ? 0x80 : 0)),
+                          byteToBcd2(date.year % 100)};
     _i2c.writeBytes(BM8563_I2C_ADDR, 0x05, buf, sizeof(buf));
 }
 

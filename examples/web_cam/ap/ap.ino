@@ -29,10 +29,12 @@ void setup() {
     }
     Serial.println("Camera Init Success");
 
-    TimerCAM.Camera.sensor->set_pixformat(TimerCAM.Camera.sensor,
-                                          PIXFORMAT_JPEG);
-    TimerCAM.Camera.sensor->set_framesize(TimerCAM.Camera.sensor,
-                                          FRAMESIZE_SVGA);
+    TimerCAM.Camera.sensor->set_pixformat(TimerCAM.Camera.sensor, PIXFORMAT_JPEG);
+    // 2MP Sensor
+    TimerCAM.Camera.sensor->set_framesize(TimerCAM.Camera.sensor, FRAMESIZE_UXGA);
+    // 3MP Sensor
+    // TimerCAM.Camera.sensor->set_framesize(TimerCAM.Camera.sensor, FRAMESIZE_QXGA);
+
     TimerCAM.Camera.sensor->set_vflip(TimerCAM.Camera.sensor, 1);
     TimerCAM.Camera.sensor->set_hmirror(TimerCAM.Camera.sensor, 0);
 
@@ -72,11 +74,9 @@ void loop() {
 
 // used to image stream
 #define PART_BOUNDARY "123456789000000000000987654321"
-static const char* _STREAM_CONTENT_TYPE =
-    "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
-static const char* _STREAM_BOUNDARY = "\r\n--" PART_BOUNDARY "\r\n";
-static const char* _STREAM_PART =
-    "Content-Type: image/jpeg\r\nContent-Length: %u\r\n\r\n";
+static const char* _STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
+static const char* _STREAM_BOUNDARY     = "\r\n--" PART_BOUNDARY "\r\n";
+static const char* _STREAM_PART         = "Content-Type: image/jpeg\r\nContent-Length: %u\r\n\r\n";
 
 static void jpegStream(WiFiClient* client) {
     Serial.println("Image stream satrt");
@@ -114,10 +114,8 @@ static void jpegStream(WiFiClient* client) {
             int64_t frame_time = fr_end - last_frame;
             last_frame         = fr_end;
             frame_time /= 1000;
-            Serial.printf("MJPG: %luKB %lums (%.1ffps)\r\n",
-                          (long unsigned int)(TimerCAM.Camera.fb->len / 1024),
-                          (long unsigned int)frame_time,
-                          1000.0 / (long unsigned int)frame_time);
+            Serial.printf("MJPG: %luKB %lums (%.1ffps)\r\n", (long unsigned int)(TimerCAM.Camera.fb->len / 1024),
+                          (long unsigned int)frame_time, 1000.0 / (long unsigned int)frame_time);
 
             TimerCAM.Camera.free();
             TimerCAM.Power.setLed(0);

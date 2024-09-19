@@ -38,8 +38,7 @@ void CStreamer::addSession(WiFiClient &aClient) {
     // we have it stored in m_Clients
 }
 
-int CStreamer::SendRtpPacket(unsigned const char *jpeg, int jpegLen,
-                             int fragmentOffset, BufPtr quant0tbl,
+int CStreamer::SendRtpPacket(unsigned const char *jpeg, int jpegLen, int fragmentOffset, BufPtr quant0tbl,
                              BufPtr quant1tbl) {
     // printf("CStreamer::SendRtpPacket offset:%d - begin\n", fragmentOffset);
 #define KRtpHeaderSize  12  // size of the RTP header
@@ -47,8 +46,7 @@ int CStreamer::SendRtpPacket(unsigned const char *jpeg, int jpegLen,
 
 #define MAX_FRAGMENT_SIZE 1100  // FIXME, pick more carefully
     int fragmentLen = MAX_FRAGMENT_SIZE;
-    if (fragmentLen + fragmentOffset >
-        jpegLen)  // Shrink last fragment if needed
+    if (fragmentLen + fragmentOffset > jpegLen)  // Shrink last fragment if needed
         fragmentLen = jpegLen - fragmentOffset;
 
     bool isLastFragment = (fragmentOffset + fragmentLen) == jpegLen;
@@ -64,8 +62,7 @@ int CStreamer::SendRtpPacket(unsigned const char *jpeg, int jpegLen,
 
     static char RtpBuf[2048];  // Note: we assume single threaded, this large
                                // buf we keep off of the tiny stack
-    int RtpPacketSize = fragmentLen + KRtpHeaderSize + KJpegHeaderSize +
-                        (includeQuantTbl ? (4 + 64 * 2) : 0);
+    int RtpPacketSize = fragmentLen + KRtpHeaderSize + KJpegHeaderSize + (includeQuantTbl ? (4 + 64 * 2) : 0);
 
     memset(RtpBuf, 0x00, sizeof(RtpBuf));
     // Prepare the first 4 byte of the packet. This is the Rtp over Rtsp header
@@ -76,15 +73,11 @@ int CStreamer::SendRtpPacket(unsigned const char *jpeg, int jpegLen,
     RtpBuf[2] = (RtpPacketSize & 0x0000FF00) >> 8;
     RtpBuf[3] = (RtpPacketSize & 0x000000FF);
     // Prepare the 12 byte RTP header
-    RtpBuf[4] = 0x80;  // RTP version
-    RtpBuf[5] =
-        0x1a |
-        (isLastFragment ? 0x80 : 0x00);  // JPEG payload (26) and marker bit
-    RtpBuf[7] = m_SequenceNumber &
-                0x0FF;  // each packet is counted with a sequence counter
-    RtpBuf[6] = m_SequenceNumber >> 8;
-    RtpBuf[8] =
-        (m_Timestamp & 0xFF000000) >> 24;  // each image gets a timestamp
+    RtpBuf[4]  = 0x80;                                   // RTP version
+    RtpBuf[5]  = 0x1a | (isLastFragment ? 0x80 : 0x00);  // JPEG payload (26) and marker bit
+    RtpBuf[7]  = m_SequenceNumber & 0x0FF;               // each packet is counted with a sequence counter
+    RtpBuf[6]  = m_SequenceNumber >> 8;
+    RtpBuf[8]  = (m_Timestamp & 0xFF000000) >> 24;  // each image gets a timestamp
     RtpBuf[9]  = (m_Timestamp & 0x00FF0000) >> 16;
     RtpBuf[10] = (m_Timestamp & 0x0000FF00) >> 8;
     RtpBuf[11] = (m_Timestamp & 0x000000FF);
@@ -94,9 +87,8 @@ int CStreamer::SendRtpPacket(unsigned const char *jpeg, int jpegLen,
     RtpBuf[15] = 0x67;
 
     // Prepare the 8 byte payload JPEG header
-    RtpBuf[16] = 0x00;  // type specific
-    RtpBuf[17] = (fragmentOffset & 0x00FF0000) >>
-                 16;  // 3 byte fragmentation offset for fragmented images
+    RtpBuf[16] = 0x00;                                 // type specific
+    RtpBuf[17] = (fragmentOffset & 0x00FF0000) >> 16;  // 3 byte fragmentation offset for fragmented images
     RtpBuf[18] = (fragmentOffset & 0x0000FF00) >> 8;
     RtpBuf[19] = (fragmentOffset & 0x000000FF);
 
@@ -155,8 +147,7 @@ int CStreamer::SendRtpPacket(unsigned const char *jpeg, int jpegLen,
                   // over RTSP header
             {
                 socketpeeraddr(session->getClient(), &otherip, &otherport);
-                udpsocketsend(m_RtpSocket, &RtpBuf[4], RtpPacketSize, otherip,
-                              session->getRtpClientPort());
+                udpsocketsend(m_RtpSocket, &RtpBuf[4], RtpPacketSize, otherip, session->getRtpClientPort());
             }
         }
         element = element->m_Next;
@@ -232,8 +223,7 @@ bool CStreamer::handleRequests(uint32_t readTimeoutMs) {
     return retVal;
 }
 
-void CStreamer::streamFrame(unsigned const char *data, uint32_t dataLen,
-                            uint32_t curMsec) {
+void CStreamer::streamFrame(unsigned const char *data, uint32_t dataLen, uint32_t curMsec) {
     if (m_prevMsec == 0)  // first frame init our timestamp
         m_prevMsec = curMsec;
 
@@ -255,10 +245,8 @@ void CStreamer::streamFrame(unsigned const char *data, uint32_t dataLen,
     } while (offset != 0);
 
     // Increment ONLY after a full frame
-    uint32_t units = 90000;  // Hz per RFC 2435
-    m_Timestamp +=
-        (units * deltams /
-         1000);  // fixed timestamp increment for a frame rate of 25fps
+    uint32_t units = 90000;                   // Hz per RFC 2435
+    m_Timestamp += (units * deltams / 1000);  // fixed timestamp increment for a frame rate of 25fps
 
     m_SendIdx++;
     if (m_SendIdx > 1) m_SendIdx = 0;
@@ -361,8 +349,7 @@ void nextJpegBlock(BufPtr *bytes) {
 // When JPEG is stored as a file it is wrapped in a container
 // This function fixes up the provided start ptr to point to the
 // actual JPEG stream data and returns the number of bytes skipped
-bool decodeJPEGfile(BufPtr *start, uint32_t *len, BufPtr *qtable0,
-                    BufPtr *qtable1) {
+bool decodeJPEGfile(BufPtr *start, uint32_t *len, BufPtr *qtable0, BufPtr *qtable1) {
     // per https://en.wikipedia.org/wiki/JPEG_File_Interchange_Format
     unsigned const char *bytes = *start;
 

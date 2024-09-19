@@ -22,10 +22,11 @@ void setup() {
     }
     Serial.println("Camera Init Success");
 
-    TimerCAM.Camera.sensor->set_pixformat(TimerCAM.Camera.sensor,
-                                          PIXFORMAT_JPEG);
-    TimerCAM.Camera.sensor->set_framesize(TimerCAM.Camera.sensor,
-                                          FRAMESIZE_QVGA);
+    TimerCAM.Camera.sensor->set_pixformat(TimerCAM.Camera.sensor, PIXFORMAT_JPEG);
+    // 2MP Sensor
+    TimerCAM.Camera.sensor->set_framesize(TimerCAM.Camera.sensor, FRAMESIZE_UXGA);
+    // 3MP Sensor
+    // TimerCAM.Camera.sensor->set_framesize(TimerCAM.Camera.sensor, FRAMESIZE_QXGA);
 
     TimerCAM.Camera.sensor->set_vflip(TimerCAM.Camera.sensor, 1);
     TimerCAM.Camera.sensor->set_hmirror(TimerCAM.Camera.sensor, 0);

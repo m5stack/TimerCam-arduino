@@ -9,10 +9,8 @@ void Power_Class::begin() {
 
     adc1_config_width(ADC_WIDTH_BIT_12);
     adc1_config_channel_atten(BAT_ADC_CHANNEL, ADC_ATTEN_DB_11);
-    adc_chars = (esp_adc_cal_characteristics_t*)calloc(
-        1, sizeof(esp_adc_cal_characteristics_t));
-    esp_adc_cal_characterize(ADC_UNIT_1, ADC_ATTEN_DB_11, ADC_WIDTH_BIT_12,
-                             BASE_VOLATAGE, adc_chars);
+    adc_chars = (esp_adc_cal_characteristics_t*)calloc(1, sizeof(esp_adc_cal_characteristics_t));
+    esp_adc_cal_characterize(ADC_UNIT_1, ADC_ATTEN_DB_11, ADC_WIDTH_BIT_12, BASE_VOLATAGE, adc_chars);
 
     ledc_timer_config_t ledc_timer = {
         .speed_mode      = LEDC_HIGH_SPEED_MODE,  // timer mode
@@ -46,10 +44,8 @@ int16_t Power_Class::getBatteryVoltage() {
         adc_raw_value += adc1_get_raw(BAT_ADC_CHANNEL);
     }
 
-    adc_raw_value = adc_raw_value / ADC_FILTER_SAMPLE;
-    uint32_t voltage =
-        (uint32_t)(esp_adc_cal_raw_to_voltage(adc_raw_value, adc_chars) /
-                   SCALE);
+    adc_raw_value    = adc_raw_value / ADC_FILTER_SAMPLE;
+    uint32_t voltage = (uint32_t)(esp_adc_cal_raw_to_voltage(adc_raw_value, adc_chars) / SCALE);
     return voltage;
 }
 

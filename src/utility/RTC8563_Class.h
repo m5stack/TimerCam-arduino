@@ -21,15 +21,11 @@ struct __attribute__((packed)) rtc_time_t {
     std::int8_t minutes;
     std::int8_t seconds;
 
-    rtc_time_t(std::int8_t hours_ = -1, std::int8_t minutes_ = -1,
-               std::int8_t seconds_ = -1)
+    rtc_time_t(std::int8_t hours_ = -1, std::int8_t minutes_ = -1, std::int8_t seconds_ = -1)
         : hours{hours_}, minutes{minutes_}, seconds{seconds_} {
     }
 
-    rtc_time_t(const tm& t)
-        : hours{(int8_t)t.tm_hour},
-          minutes{(int8_t)t.tm_min},
-          seconds{(int8_t)t.tm_sec} {
+    rtc_time_t(const tm& t) : hours{(int8_t)t.tm_hour}, minutes{(int8_t)t.tm_min}, seconds{(int8_t)t.tm_sec} {
     }
 };
 
@@ -46,8 +42,7 @@ struct __attribute__((packed)) rtc_date_t {
     /// weekDay 0:sun / 1:mon / 2:tue / 3:wed / 4:thu / 5:fri / 6:sat
     std::int8_t weekDay;
 
-    rtc_date_t(std::int16_t year_ = 2000, std::int8_t month_ = 1,
-               std::int8_t date_ = -1, std::int8_t weekDay_ = -1)
+    rtc_date_t(std::int16_t year_ = 2000, std::int8_t month_ = 1, std::int8_t date_ = -1, std::int8_t weekDay_ = -1)
         : year{year_}, month{month_}, date{date_}, weekDay{weekDay_} {
     }
 
@@ -63,8 +58,7 @@ struct __attribute__((packed)) rtc_datetime_t {
     rtc_date_t date;
     rtc_time_t time;
     rtc_datetime_t() = default;
-    rtc_datetime_t(const rtc_date_t& d, const rtc_time_t& t)
-        : date{d}, time{t} {};
+    rtc_datetime_t(const rtc_date_t& d, const rtc_time_t& t) : date{d}, time{t} {};
     rtc_datetime_t(const tm& t) : date{t}, time{t} {
     }
     tm get_tm(void);
