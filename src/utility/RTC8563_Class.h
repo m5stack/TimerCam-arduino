@@ -13,6 +13,7 @@
 typedef void timezone;
 #endif
 #include <time.h>
+#include <cstdint>
 
 #define BM8563_I2C_ADDR 0x51
 
