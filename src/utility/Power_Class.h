@@ -14,7 +14,7 @@
 #define POWER_LED_PIN  2
 
 #define BAT_ADC_PIN     38
-#define BAT_ADC_CHANNEL ADC1_GPIO38_CHANNEL
+#define BAT_ADC_CHANNEL ADC1_CHANNEL_2
 
 #define BASE_VOLATAGE     3600
 #define SCALE             0.661
