@@ -75,7 +75,7 @@ void loop() {
 // used to image stream
 #define PART_BOUNDARY "123456789000000000000987654321"
 static const char* _STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
-static const char* _STREAM_BOUNDARY     = "\r\n--" PART_BOUNDARY "\r\n";
+static const char* _STREAM_BOUNDARY     = "--" PART_BOUNDARY "\r\n";
 static const char* _STREAM_PART         = "Content-Type: image/jpeg\r\nContent-Length: %u\r\n\r\n";
 
 static void jpegStream(WiFiClient* client) {
@@ -96,7 +96,7 @@ static void jpegStream(WiFiClient* client) {
             Serial.printf("pic size: %d\n", TimerCAM.Camera.fb->len);
 
             client->print(_STREAM_BOUNDARY);
-            client->printf(_STREAM_PART, TimerCAM.Camera.fb);
+            client->printf(_STREAM_PART, TimerCAM.Camera.fb->len);
             int32_t to_sends    = TimerCAM.Camera.fb->len;
             int32_t now_sends   = 0;
             uint8_t* out_buf    = TimerCAM.Camera.fb->buf;
