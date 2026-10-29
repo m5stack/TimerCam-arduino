@@ -6,7 +6,7 @@
 #define __M5_RTC8563_CLASS_H__
 
 #include "I2C_Class.h"
-
+#include <cstdint>
 #if __has_include(<sys/time.h>)
 #include <sys/time.h>
 #else

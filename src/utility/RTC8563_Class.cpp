@@ -31,7 +31,7 @@ bool RTC8563_Class::begin() {
     _i2c.begin(&Wire, 12, 14);
     _i2c.writeByte(BM8563_I2C_ADDR, 0x00, 0x00);
     return _i2c.writeByte(BM8563_I2C_ADDR, 0x0E, 0x03);
-    ;
+    
 }
 
 bool RTC8563_Class::getVoltLow(void) {
@@ -215,7 +215,7 @@ void RTC8563_Class::clearIRQ(void) {
 }
 
 void RTC8563_Class::disableIRQ(void) {
-    // disable alerm (bit7:1=disabled)
+    // disable alarm (bit7:1=disabled)
     std::uint8_t buf[4] = {0x80, 0x80, 0x80, 0x80};
     _i2c.writeBytes(BM8563_I2C_ADDR, 0x09, buf, 4);
 
